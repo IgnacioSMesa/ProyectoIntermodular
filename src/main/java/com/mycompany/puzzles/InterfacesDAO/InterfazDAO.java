@@ -8,29 +8,29 @@ import com.mycompany.puzzles.Excecpiones.*;
 
 /**
  *
- * @author ignacio y Natalia
+ * @author Ignacio y Natalia
  */
 public interface InterfazDAO {
 
-
-    /***
+    /**
      *
-     * @return true si esta lleno false si hay espacio
+     * @return true si está lleno false si hay espacio
      */
     public boolean lleno();
     public boolean vacio();
-    
+
     /**
-     @param obj de tipo puzzle o personaje
-     @return true si se inserta o false si no se inserta
-     @throws InsercionException
-     @throws DataFullException
-     @throws DuplicateEntry
-     
+     *
+     * @param obj de tipo puzzle o personaje
+     * @return true si se inserta o false si no se inserta
+     * @throws InsercionException
+     * @throws DataFullException
+     * @throws DuplicateEntry
      */
     public boolean insertar(Object obj)throws InsercionException, DataFullException, DuplicateEntry;
 
     /**
+     *
      * @param obj de tipo objeto puzzle o personaje
      * @return true si se elimina false si no se elimina
      * @throws ObjectNotExist si no existe el objeto
@@ -59,4 +59,5 @@ public interface InterfazDAO {
      * @throws DataEmptyAccess
      */
     public void buscarAtributo(String atributo) throws  DataEmptyAccess;
+
 }
