@@ -1,24 +1,42 @@
- Gestor de puzzles para creadores (CMS de puzzles)
-Descripción:
-Una aplicación de escritorio o multiplataforma que permita a los usuarios (administradores o creadores) gestionar puzzles, categorías, niveles y estadísticas de jugadores además  que permita organizar, etiquetar y buscar puzzles.
-Módulos posibles:
-CRUD de puzzles (crear, editar, eliminar, buscar).
+🧩 Gestor de Puzzles para Creadores (CMS de Puzzles)
 
+Gestor de Puzzles para Creadores es una aplicación de escritorio o multiplataforma diseñada para facilitar la administración y organización de puzzles. Esta herramienta está pensada para creadores de contenido, administradores o plataformas educativas/lúdicas que necesitan un control completo sobre sus puzzles, niveles de dificultad, estadísticas de jugadores y mucho más.
 
-Gestión de usuarios y permisos (administrador / usuario).
+🚀 Funcionalidades Principales
+🔧 Gestión de Puzzles (CRUD)
 
+      -Crear, editar, eliminar y buscar puzzles fácilmente.
 
-Control de niveles y dificultad.
+      -Organización por categorías y etiquetas.
 
+      -Filtro avanzado por nombre, categoría, dificultad, precio, etc.
 
-Panel de estadísticas (tiempos medios, popularidad de puzzles).
+👥 Gestión de Usuarios y Permisos
 
+   Control de acceso mediante roles:
 
-Exportación de puzzles a formatos compatibles (JSON, XML, CSV, etc.).
+      -Administrador: acceso total a todos los módulos.
 
+      -Usuario/Creador: acceso restringido a sus propios puzzles o según permisos asignados.
 
-Añadir precios de los puzzles, para poder filtrar por precios.
+🎮 Control de Niveles y Dificultad
 
+      -Asignación de niveles a cada puzzle.
 
+      -Configuración de dificultad para facilitar la segmentación y clasificación.
 
+📊 Panel de Estadísticas
 
+Visualización de datos clave como:
+
+      -Tiempo promedio de resolución.
+
+      -Popularidad de cada puzzle.
+
+      -Participación de jugadores.
+
+📤 Exportación de Datos
+
+Exportación de puzzles y datos asociados en múltiples formatos:
+
+     -JSON, XML, CSV, entre otros.
