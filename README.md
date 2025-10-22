@@ -1,6 +1,9 @@
 🧩 Gestor de Puzzles para Creadores (CMS de Puzzles)
 
-      Gestor de Puzzles para Creadores es una aplicación de escritorio o multiplataforma diseñada para facilitar la administración y organización de puzzles. Esta herramienta está pensada para creadores de contenido, administradores o plataformas educativas/lúdicas que necesitan un control completo sobre sus puzzles, niveles de dificultad, estadísticas de jugadores y mucho más.
+      Gestor de Puzzles para Creadores es una aplicación de escritorio o multiplataforma diseñada para facilitar
+      la administración y organización de puzzles. Esta herramienta está pensada para creadores de contenido,
+      administradores o plataformas educativas/lúdicas que necesitan un control completo sobre sus puzzles,
+      niveles de dificultad, estadísticas de jugadores y mucho más.
 
 🚀 Funcionalidades Principales
 🔧 Gestión de Puzzles (CRUD)
