@@ -6,7 +6,7 @@ package com.mycompany.puzzles;
 
 /**
  *
- * @author natal
+ * @author Ignacio y Natalia
  */
 public class Pantalla extends javax.swing.JFrame {
 
@@ -77,6 +77,4 @@ public class Pantalla extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    // End of variables declaration//GEN-END:variables
 }

@@ -17,11 +17,16 @@ public interface InterfazDAO {
      * @return true si está lleno false si hay espacio
      */
     public boolean lleno();
+
+    /**
+     *
+     * @return true si está vacío
+     */
     public boolean vacio();
 
     /**
      *
-     * @param obj de tipo puzzle o personaje
+     * @param obj de tipo puzzle o usuario
      * @return true si se inserta o false si no se inserta
      * @throws InsercionException
      * @throws DataFullException
@@ -31,7 +36,7 @@ public interface InterfazDAO {
 
     /**
      *
-     * @param obj de tipo objeto puzzle o personaje
+     * @param obj de tipo objeto puzzle o usuario
      * @return true si se elimina false si no se elimina
      * @throws ObjectNotExist si no existe el objeto
      * @throws DataEmptyAccess si esta vacio
@@ -40,7 +45,7 @@ public interface InterfazDAO {
 
     /**
      *
-     * @param obj de tipo puzzle o personaje
+     * @param obj de tipo puzzle o usuario
      * @return true si se actualiza false si no se actualiza
      * @throws ObjectNotExist
      * @throws DataEmptyAccess
@@ -59,5 +64,14 @@ public interface InterfazDAO {
      * @throws DataEmptyAccess
      */
     public void buscarAtributo(String atributo) throws  DataEmptyAccess;
+
+    /**
+     *
+     * @param obj de tipo usuario
+     * @return true si el usuario esta bloqueado false si no esta bloqueado
+     * @throws DataFullException
+     * @throws DuplicateEntry
+     */
+    public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry;
 
 }

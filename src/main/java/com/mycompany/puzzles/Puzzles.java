@@ -6,7 +6,7 @@ package com.mycompany.puzzles;
 
 /**
  *
- * @author natal
+ * @author Ignacio y Natalia
  */
 public class Puzzles {
 
