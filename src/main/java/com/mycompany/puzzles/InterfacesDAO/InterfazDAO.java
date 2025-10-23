@@ -6,6 +6,8 @@ package com.mycompany.puzzles.InterfacesDAO;
 
 import com.mycompany.puzzles.Excecpiones.*;
 
+import java.util.List;
+
 /**
  *
  * @author Ignacio y Natalia
@@ -26,31 +28,31 @@ public interface InterfazDAO {
 
     /**
      *
-     * @param obj de tipo puzzle o usuario
+     * @param jsonData de tipo puzzle o usuario
      * @return true si se inserta o false si no se inserta
      * @throws InsercionException
      * @throws DataFullException
      * @throws DuplicateEntry
      */
-    public boolean insertar(Object obj)throws InsercionException, DataFullException, DuplicateEntry;
+    public boolean insertar(String jsonData)throws InsercionException, DataFullException, DuplicateEntry;
 
     /**
      *
-     * @param obj de tipo objeto puzzle o usuario
+     * @param jsonData objeto a eliminar
      * @return true si se elimina false si no se elimina
      * @throws ObjectNotExist si no existe el objeto
      * @throws DataEmptyAccess si esta vacio
      */
-    public boolean eliminar(Object obj) throws ObjectNotExist, DataEmptyAccess;
+    public boolean eliminar(String jsonData) throws ObjectNotExist, DataEmptyAccess;
 
     /**
      *
-     * @param obj de tipo puzzle o usuario
+     * @param jsonData objeto a actualizar
      * @return true si se actualiza false si no se actualiza
      * @throws ObjectNotExist
      * @throws DataEmptyAccess
      */
-    public boolean actualizar(Object obj) throws  ObjectNotExist, DataEmptyAccess;
+    public boolean actualizar(String jsonData) throws  ObjectNotExist, DataEmptyAccess;
 
     /**
      * Devuelve un listado de los objetos
@@ -73,5 +75,14 @@ public interface InterfazDAO {
      * @throws DuplicateEntry
      */
     public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry;
+
+    /**
+     *
+     * @return una lista de los 5 puzzles mejor valorados del usuario
+     * @throws DataEmptyAccess
+     */
+    public List<Object> getTopFive(Object obj) throws DataEmptyAccess;
+
+    public String mejorTiempo();
 
 }
