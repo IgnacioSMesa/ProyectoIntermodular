@@ -28,31 +28,31 @@ public interface InterfazDAO {
 
     /**
      *
-     * @param jsonData de tipo puzzle o usuario
+     * @param obj de tipo puzzle o usuario
      * @return true si se inserta o false si no se inserta
      * @throws InsercionException
      * @throws DataFullException
      * @throws DuplicateEntry
      */
-    public boolean insertar(String jsonData)throws InsercionException, DataFullException, DuplicateEntry;
+    public boolean insertar(Object obj)throws InsercionException, DataFullException, DuplicateEntry;
 
     /**
      *
-     * @param jsonData objeto a eliminar
+     * @param obj objeto a eliminar
      * @return true si se elimina false si no se elimina
      * @throws ObjectNotExist si no existe el objeto
      * @throws DataEmptyAccess si esta vacio
      */
-    public boolean eliminar(String jsonData) throws ObjectNotExist, DataEmptyAccess;
+    public boolean eliminar(Object obj) throws ObjectNotExist, DataEmptyAccess;
 
     /**
      *
-     * @param jsonData objeto a actualizar
+     * @param obj objeto a actualizar
      * @return true si se actualiza false si no se actualiza
      * @throws ObjectNotExist
      * @throws DataEmptyAccess
      */
-    public boolean actualizar(String jsonData) throws  ObjectNotExist, DataEmptyAccess;
+    public boolean actualizar(Object obj) throws  ObjectNotExist, DataEmptyAccess;
 
     /**
      * Devuelve un listado de los objetos

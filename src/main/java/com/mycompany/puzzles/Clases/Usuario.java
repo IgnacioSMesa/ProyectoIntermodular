@@ -4,30 +4,32 @@ import java.util.List;
 
 public class Usuario {
 
+    public enum TipoUsuario {ADMIN, BLOQUEADO, USUARIO}
+
     private String nombre;
     private String apellido;
     private String email;
     private String passwd;
-    private Boolean esAdmin;
+    private TipoUsuario tipoUsuario;
     private List<Puzzle> puzzles;
 
     //Constructores
     public Usuario() {}
 
-    public Usuario(String nombre, String apellido, String email, String passwd, Boolean esAdmin) {
+    public Usuario(String nombre, String apellido, String email, String passwd, TipoUsuario tipoUsuario) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.passwd = passwd;
-        this.esAdmin = esAdmin;
+        this.tipoUsuario = tipoUsuario;
     }
 
-    public Usuario(String nombre, String apellido, String email, String passwd, Boolean esAdmin, List<Puzzle> puzzles) {
+    public Usuario(String nombre, String apellido, String email, String passwd, TipoUsuario tipoUsuario, List<Puzzle> puzzles) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.passwd = passwd;
-        this.esAdmin = esAdmin;
+        this.tipoUsuario = tipoUsuario;
         this.puzzles = puzzles;
     }
 
@@ -48,8 +50,8 @@ public class Usuario {
         return passwd;
     }
 
-    public Boolean getEsAdmin() {
-        return esAdmin;
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
     }
 
     public List<Puzzle> getPuzzles() {
@@ -73,8 +75,8 @@ public class Usuario {
         this.passwd = passwd;
     }
 
-    public void setEsAdmin(Boolean esAdmin) {
-        this.esAdmin = esAdmin;
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     public void setPuzzles(List<Puzzle> puzzles) {
@@ -88,7 +90,7 @@ public class Usuario {
                 ", apellido='" + apellido + '\'' +
                 ", email='" + email + '\'' +
                 ", passwd='" + passwd + '\'' +
-                ", esAdmin=" + esAdmin +
+                ", tipoUsuario=" + tipoUsuario +
                 ", puzzles=" + puzzles +
                 '}';
     }
