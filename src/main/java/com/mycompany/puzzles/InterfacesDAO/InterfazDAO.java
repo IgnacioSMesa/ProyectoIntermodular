@@ -4,6 +4,7 @@
  */
 package com.mycompany.puzzles.InterfacesDAO;
 
+import com.mycompany.puzzles.Clases.Usuario;
 import com.mycompany.puzzles.Excecpiones.*;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public interface InterfazDAO {
      * Devuelve un listado de los objetos
      * @throws DataEmptyAccess
      */
-    public void buscar() throws DataEmptyAccess;
+    public List<Usuario> buscar() throws DataEmptyAccess;
 
     /**
      * Devuelve un objeto

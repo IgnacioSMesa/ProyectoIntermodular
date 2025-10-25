@@ -20,7 +20,6 @@ public class InterfazXML implements InterfazDAO {
     @Override
     public boolean insertar(Object obj) throws InsercionException, DataFullException, DuplicateEntry {
 
-
         return false;
     }
 
@@ -35,8 +34,8 @@ public class InterfazXML implements InterfazDAO {
     }
 
     @Override
-    public void buscar() throws DataEmptyAccess {
-
+    public List<Usuario> buscar() throws DataEmptyAccess {
+        return null;
     }
 
     @Override

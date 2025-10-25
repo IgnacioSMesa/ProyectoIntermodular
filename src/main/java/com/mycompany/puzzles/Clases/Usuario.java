@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Usuario {
 
-    public enum TipoUsuario {ADMIN, BLOQUEADO, USUARIO}
+    public enum TipoUsuario {Admin, Bloqueado, Usuario}
 
     private String nombre;
     private String apellido;

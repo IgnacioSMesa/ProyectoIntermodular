@@ -2,12 +2,12 @@ package com.mycompany.puzzles.Clases;
 
 public class Puzzle {
 
-    public enum dificultades {FACIL, MEDIO, DIFICIL, EXTREMO};
+    public enum Dificultades {Facil, Medio, Dificil, Extremo};
 
     private String autor;
     private float media;
     private int piezas;
-    private dificultades dificultad;
+    private Dificultades dificultad;
     private String descripcion;
     private boolean color;//color unico o no
     private int valoracion;
@@ -15,7 +15,7 @@ public class Puzzle {
     //Constructores
     public Puzzle() {}
 
-    public Puzzle(String autor, float media, int piezas, dificultades dificultad, String descripcion, boolean color, int valoracion) {
+    public Puzzle(String autor, float media, int piezas, Dificultades dificultad, String descripcion, boolean color, int valoracion) {
         this.autor = autor;
         this.media = media;
         this.piezas = piezas;
@@ -38,7 +38,7 @@ public class Puzzle {
         return piezas;
     }
 
-    public dificultades getDificultad() {
+    public Dificultades getDificultad() {
         return dificultad;
     }
 
@@ -67,7 +67,7 @@ public class Puzzle {
         this.piezas = piezas;
     }
 
-    public void setDificultad(dificultades dificultad) {
+    public void setDificultad(Dificultades dificultad) {
         this.dificultad = dificultad;
     }
 
