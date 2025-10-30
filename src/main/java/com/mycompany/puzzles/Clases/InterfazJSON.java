@@ -3,10 +3,9 @@ package com.mycompany.puzzles.Clases;
 import com.mycompany.puzzles.Excecpiones.*;
 import com.mycompany.puzzles.InterfacesDAO.InterfazDAO;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
@@ -15,7 +14,8 @@ import jakarta.json.*;
 
 public class InterfazJSON implements InterfazDAO {
 
-    private File fichero = new File("C:\\Users\\natal\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoIntermodular\\src\\main\\java\\com\\mycompany\\puzzles\\Ficheros\\usuarios.json");
+    // private File fichero = new File("C:\\Users\\natal\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoIntermodular\\src\\main\\java\\com\\mycompany\\puzzles\\Ficheros\\usuarios.json");
+    private File fichero = new File("src/main/resources/Ficheros/usuarios.json");
 
     @Override
     public boolean lleno() {
@@ -42,8 +42,17 @@ public class InterfazJSON implements InterfazDAO {
 
     @Override
     public boolean insertar(Object obj) throws InsercionException, DataFullException, DuplicateEntry {
-
+        System.out.println(fichero);
         Usuario usuario = (Usuario) obj;
+
+        if (!vacio()) {
+            List<Usuario> usuarioExiste = buscar();
+            for (Usuario u : usuarioExiste) {
+                if (u.getEmail().equals(usuario.getEmail())) {
+                    throw new InsercionException("El usuario ya existe");
+                }
+            }
+        }
 
         JsonArrayBuilder puzzlesArrayBuilder = Json.createArrayBuilder();
         for (Puzzle p : usuario.getPuzzles()) {
@@ -100,7 +109,7 @@ public class InterfazJSON implements InterfazDAO {
             return true;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("No se pudo insertar el usuario: " + e.getMessage());
         }
 
         return false;

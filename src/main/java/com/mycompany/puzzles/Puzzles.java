@@ -51,12 +51,16 @@ public class Puzzles {
                 List<Puzzle> puzzles = new ArrayList<>();
 
                 Usuario usuario = new Usuario(nombre, apellido, email, passwd, Usuario.TipoUsuario.Usuario, puzzles);
-
-                if (interfazJSON.insertar(usuario)) {
-                    System.out.println("Se ha escrito el objeto Usuario en el archivo usuarios.json.");
-                } else {
-                    System.out.println("No se ha escrito el objeto Usuario en el archivo usuarios.json.");
+                try{
+                    if (interfazJSON.insertar(usuario)) {
+                        System.out.println("Se ha escrito el objeto Usuario en el archivo usuarios.json.");
+                    } else {
+                        System.out.println("No se ha escrito el objeto Usuario en el archivo usuarios.json.");
+                    }
+                }catch(InsercionException e){
+                    System.out.println("No se pudo insertar el usuario: " + e.getMessage());
                 }
+
 
             case "2":
 
