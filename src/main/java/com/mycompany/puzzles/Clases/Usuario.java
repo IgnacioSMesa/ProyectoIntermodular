@@ -1,5 +1,9 @@
 package com.mycompany.puzzles.Clases;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+
 import java.util.List;
 
 public class Usuario {
@@ -94,5 +98,28 @@ public class Usuario {
                 ", puzzles=" + puzzles +
                 '}';
     }
+    public JsonObject toJson() {
+        JsonArrayBuilder puzzlesArray = Json.createArrayBuilder();
+        for (Puzzle p : puzzles) {
+            puzzlesArray.add(Json.createObjectBuilder()
+                    .add("autor", p.getAutor())
+                    .add("media", p.getMedia())
+                    .add("piezas", p.getPiezas())
+                    .add("dificultad", p.getDificultad().toString())
+                    .add("descripcion", p.getDescripcion())
+                    .add("color", p.isColor())
+                    .add("valoracion", p.getValoracion()));
+        }
+
+        return Json.createObjectBuilder()
+                .add("nombre", nombre)
+                .add("apellido", apellido)
+                .add("email", email)
+                .add("passwd", passwd)
+                .add("tipo", tipoUsuario.toString())
+                .add("puzzles", puzzlesArray)
+                .build();
+    }
+
 
 }

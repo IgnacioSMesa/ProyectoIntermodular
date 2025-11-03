@@ -35,12 +35,12 @@ public interface InterfazDAO {
 
     /**
      *
-     * @param obj objeto a eliminar
+     * @param email objeto a eliminar
      * @return true si se elimina false si no se elimina
      * @throws ObjectNotExist si no existe el objeto
      * @throws DataEmptyAccess si esta vacio
      */
-    public boolean eliminar(Object obj) throws ObjectNotExist, DataEmptyAccess;
+    public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException;
 
     /**
      *

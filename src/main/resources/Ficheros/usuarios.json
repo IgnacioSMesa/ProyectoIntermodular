@@ -1,1 +1,1 @@
-[{"nombre":"a","apellido":"a","email":"a","passwd":"a","tipo":"Usuario","puzzles":[]}]
+[{"nombre":"yo","apellido":"yo","email":"yo@gmail.com","passwd":"1234","tipo":"Usuario","puzzles":[]},{"nombre":"y","apellido":"y","email":"y","passwd":"y","tipo":"Usuario","puzzles":[{"autor":"a","media":4.0,"piezas":5,"dificultad":"Facil","descripcion":"dddd","color":true,"valoracion":4}]}]

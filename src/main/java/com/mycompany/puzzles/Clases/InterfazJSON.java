@@ -8,18 +8,22 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.sql.SQLOutput;
 import java.util.*;
 
 import jakarta.json.*;
 
 public class InterfazJSON implements InterfazDAO {
 
-    // private File fichero = new File("C:\\Users\\natal\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoIntermodular\\src\\main\\java\\com\\mycompany\\puzzles\\Ficheros\\usuarios.json");
     private File fichero = new File("src/main/resources/Ficheros/usuarios.json");
 
     @Override
     public boolean lleno() {
-        return false;
+
+        long TAM_MAX = 5L * 1024 * 1024 * 1024; // 5 GB en bytes
+
+        return fichero.length() >= TAM_MAX;
+
     }
 
     @Override
@@ -42,16 +46,20 @@ public class InterfazJSON implements InterfazDAO {
 
     @Override
     public boolean insertar(Object obj) throws InsercionException, DataFullException, DuplicateEntry {
-        System.out.println(fichero);
+
         Usuario usuario = (Usuario) obj;
 
         if (!vacio()) {
             List<Usuario> usuarioExiste = buscar();
             for (Usuario u : usuarioExiste) {
                 if (u.getEmail().equals(usuario.getEmail())) {
-                    throw new InsercionException("El usuario ya existe");
+                    throw new DuplicateEntry("El usuario ya existe");
                 }
             }
+        }
+
+        if (lleno()) {
+            throw new DataFullException("No hay espacio en el fichero");
         }
 
         JsonArrayBuilder puzzlesArrayBuilder = Json.createArrayBuilder();
@@ -109,21 +117,103 @@ public class InterfazJSON implements InterfazDAO {
             return true;
 
         } catch (IOException e) {
-            System.out.println("No se pudo insertar el usuario: " + e.getMessage());
+            throw new InsercionException("Error al insertar" + e);
         }
-
-        return false;
 
     }
 
     @Override
-    public boolean eliminar(Object obj) throws ObjectNotExist, DataEmptyAccess {
-        return false;
+    public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException {
+
+        if (email == null || email.isEmpty()) {
+            throw new DataEmptyAccess("El email está vacío");
+        }
+
+        List<Usuario> usuarios = buscar(); // Cargar todos los usuarios desde el fichero
+        boolean eliminado = false;
+
+        for (Usuario u : usuarios) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
+                try {
+
+                    String content = new String(Files.readAllBytes(fichero.toPath()), StandardCharsets.UTF_8);
+
+                    // Parsear el JSON como un array
+                    JsonReader reader = Json.createReader(new StringReader(content));
+                    JsonArray jsonArray = reader.readArray();
+
+                    // Crear un nuevo array sin el usuario que tenga ese email
+                    JsonArrayBuilder nuevoArray = Json.createArrayBuilder();
+                    for (JsonValue value : jsonArray) {
+                        JsonObject usuario = value.asJsonObject();
+                        String emails = usuario.getString("email", "");
+                        if (!emails.equalsIgnoreCase(email)) {
+                            nuevoArray.add(usuario);
+                        }
+                    }
+
+                    // Escribir el nuevo array al archivo (sobrescribiendo el anterior)
+                    try (FileWriter fileWriter = new FileWriter(fichero, false);
+                         JsonWriter jsonWriter = Json.createWriter(fileWriter)) {
+                        jsonWriter.writeArray(nuevoArray.build());
+                    }
+
+                    eliminado = true;
+                    System.out.println("Usuario eliminado correctamente.");
+
+                    break; // salimos del while
+                } catch (IOException e) {
+                    throw new DataAccessException("Error al leer o escribir el archivo: " + e.getMessage());
+                }
+            }
+        }
+
+        if (!eliminado) {
+            throw new ObjectNotExist("El usuario no existe o la contraseña no coincide.");
+        }
+
+        return true;
+
     }
 
     @Override
     public boolean actualizar(Object obj) throws ObjectNotExist, DataEmptyAccess {
-        return false;
+
+        if (obj == null) {
+            throw new DataEmptyAccess("El objeto usuario está vacío");
+        }
+
+        Usuario usuarioActualizado = (Usuario) obj;
+        List<Usuario> usuarios = buscar();
+
+        boolean encontrado = false;
+        JsonArrayBuilder nuevoArray = Json.createArrayBuilder();
+
+        for (Usuario u : usuarios) {
+            if (u.getEmail().equalsIgnoreCase(usuarioActualizado.getEmail())) {
+                // Sustituimos el antiguo por el nuevo (actualizado)
+                nuevoArray.add(usuarioActualizado.toJson());
+                encontrado = true;
+            } else {
+                // Conservamos los demás
+                nuevoArray.add(u.toJson());
+            }
+        }
+
+        if (!encontrado) {
+            throw new ObjectNotExist("El usuario no existe en el archivo JSON");
+        }
+
+        // Escribimos el JSON actualizado
+        try (FileWriter fw = new FileWriter(fichero, false);
+             JsonWriter writer = Json.createWriter(fw)) {
+            writer.writeArray(nuevoArray.build());
+        } catch (IOException e) {
+            throw new RuntimeException("Error al escribir el archivo: " + e.getMessage());
+        }
+
+        return true;
+
     }
 
     @Override
@@ -175,7 +265,6 @@ public class InterfazJSON implements InterfazDAO {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
             throw new DataEmptyAccess("Error leyendo el archivo JSON", e);
         }
 

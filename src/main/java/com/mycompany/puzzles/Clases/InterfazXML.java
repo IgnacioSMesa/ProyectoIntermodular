@@ -24,7 +24,7 @@ public class InterfazXML implements InterfazDAO {
     }
 
     @Override
-    public boolean eliminar(Object obj) throws ObjectNotExist, DataEmptyAccess {
+    public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException{
         return false;
     }
 
