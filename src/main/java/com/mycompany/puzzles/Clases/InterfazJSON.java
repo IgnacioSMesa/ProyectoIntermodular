@@ -16,6 +16,7 @@ import jakarta.json.*;
 public class InterfazJSON implements InterfazDAO {
 
     private File fichero = new File("src/main/resources/Ficheros/usuarios.json");
+    private File ficheroBloq = new File("src/main/resources/Ficheros/usuariosBloqueados.json");
 
     @Override
     public boolean lleno() {
@@ -30,8 +31,6 @@ public class InterfazJSON implements InterfazDAO {
     public boolean vacio() {
 
         if (fichero.exists()) {
-
-            System.out.println(fichero.length());
 
             if (fichero.length() == 0) {
                 return true;
@@ -123,7 +122,7 @@ public class InterfazJSON implements InterfazDAO {
     }
 
     @Override
-    public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException {
+    public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException, ObjectNotExist {
 
         if (email == null || email.isEmpty()) {
             throw new DataEmptyAccess("El email está vacío");
@@ -156,6 +155,8 @@ public class InterfazJSON implements InterfazDAO {
                     try (FileWriter fileWriter = new FileWriter(fichero, false);
                          JsonWriter jsonWriter = Json.createWriter(fileWriter)) {
                         jsonWriter.writeArray(nuevoArray.build());
+                    } catch (Exception e) {
+                        throw new DeleteException("Error al eliminar" + e);
                     }
 
                     eliminado = true;
@@ -165,6 +166,8 @@ public class InterfazJSON implements InterfazDAO {
                 } catch (IOException e) {
                     throw new DataAccessException("Error al leer o escribir el archivo: " + e.getMessage());
                 }
+            }else{
+                throw new ObjectNotExist("No existe el usuario a eliminar");
             }
         }
 
@@ -220,6 +223,9 @@ public class InterfazJSON implements InterfazDAO {
     public List<Usuario> buscar() throws DataEmptyAccess {
 
         List<Usuario> listaUsuarios = new ArrayList<>();
+        if (vacio()){
+            throw new DataEmptyAccess("No hay datos");
+        }
 
         try (FileReader fileReader = new FileReader(fichero);
              JsonReader jsonReader = Json.createReader(fileReader)) {
@@ -273,13 +279,91 @@ public class InterfazJSON implements InterfazDAO {
     }
 
     @Override
-    public void buscarAtributo(String atributo) throws DataEmptyAccess {
+    public List<String> buscarAtributo(String atributo) throws DataEmptyAccess {
 
+        List<Usuario> listaUsuarios = buscar();
+        List<String> encontrado = new  ArrayList<>();
+
+        if(listaUsuarios.isEmpty()){
+            throw new DataEmptyAccess("No hay datos");
+        }
+
+        for (Usuario usuario : listaUsuarios) {
+            JsonObject user = usuario.toJson();
+
+            if(user.containsKey(atributo)){
+                encontrado.add(user.get(atributo).toString());
+            }
+        }
+        return encontrado;
     }
 
     @Override
-    public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry {
-        return false;
+    public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry,InsercionException {
+
+        Usuario usuario = (Usuario) obj;
+        List<Usuario>  listaUsuarios = buscar();
+
+        if (lleno()) {
+            throw new DataFullException("No hay espacio en el fichero");
+        }
+        for(Usuario usuarioAux : listaUsuarios){
+            if(usuario.getEmail().equalsIgnoreCase(usuarioAux.getEmail())){
+                try{
+                    eliminar(usuario.getEmail());
+                } catch (DeleteException e) {
+                    throw new RuntimeException(e);
+                } catch (DataAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        JsonArrayBuilder puzzlesArrayBuilder = Json.createArrayBuilder();
+        JsonObject jsonUsuario = Json.createObjectBuilder()
+                .add("nombre", usuario.getNombre())
+                .add("apellido", usuario.getApellido())
+                .add("email", usuario.getEmail())
+                .add("passwd", usuario.getPasswd())
+                .add("tipo", String.valueOf(Usuario.TipoUsuario.Usuario))
+                .add("puzzles", puzzlesArrayBuilder)
+                .build();
+
+        try (FileWriter fileWriter = new FileWriter(ficheroBloq.getAbsolutePath(), true);
+             JsonWriter jsonWriter = Json.createWriter(fileWriter)) {
+
+            if (vacio()) {
+
+                fileWriter.write("[");
+                jsonWriter.writeObject(jsonUsuario);
+                fileWriter.write("]");
+
+            } else {
+
+                String content = new String(Files.readAllBytes(ficheroBloq.toPath()), StandardCharsets.UTF_8);
+
+                if (content.trim().endsWith("]")) {
+                    int lastIndex = content.lastIndexOf("]");
+                    content = content.substring(0, lastIndex);
+                }
+
+                if (content.trim().length() > 1) {
+                    content += ",";
+                }
+
+                Files.write(ficheroBloq.toPath(), content.getBytes(StandardCharsets.UTF_8));
+
+                jsonWriter.writeObject(jsonUsuario);
+                fileWriter.write("]");
+
+            }
+
+        }catch (IOException e) {
+            throw new InsercionException("Error al insertar" + e);
+        }
+
+
+            return true;
     }
 
     @Override

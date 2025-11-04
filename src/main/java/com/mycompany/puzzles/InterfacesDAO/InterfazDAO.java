@@ -40,7 +40,7 @@ public interface InterfazDAO {
      * @throws ObjectNotExist si no existe el objeto
      * @throws DataEmptyAccess si esta vacio
      */
-    public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException;
+    public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException, ObjectNotExist;
 
     /**
      *
@@ -58,11 +58,11 @@ public interface InterfazDAO {
     public List<Usuario> buscar() throws DataEmptyAccess;
 
     /**
-     * Devuelve un objeto
+     * Devuelve lo que queramos buscar por el argumento
      * @param atributo por el que buscar
      * @throws DataEmptyAccess
      */
-    public void buscarAtributo(String atributo) throws  DataEmptyAccess;
+    public List<String> buscarAtributo(String atributo) throws  DataEmptyAccess;
 
     /**
      *
@@ -71,7 +71,7 @@ public interface InterfazDAO {
      * @throws DataFullException
      * @throws DuplicateEntry
      */
-    public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry;
+    public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry, InsercionException;
 
     /**
      *

@@ -7,6 +7,7 @@ package com.mycompany.puzzles;
 import com.mycompany.puzzles.Clases.InterfazJSON;
 import com.mycompany.puzzles.Clases.Puzzle;
 import com.mycompany.puzzles.Clases.Usuario;
+import com.mycompany.puzzles.Excecpiones.DataEmptyAccess;
 import com.mycompany.puzzles.Excecpiones.DataFullException;
 import com.mycompany.puzzles.Excecpiones.DuplicateEntry;
 import com.mycompany.puzzles.Excecpiones.InsercionException;
@@ -30,7 +31,8 @@ public class Puzzles {
 
         System.out.println("1) Registrarse");
         System.out.println("2) Iniciar sesión");
-        System.out.println("3) Contraseña olvidada");
+       // System.out.println("3) Contraseña olvidada");
+        System.out.println("3) Bloquear usuario");
         System.out.println("4) Salir");
 
         String email = "", passwd = "", opcion = sc.next();
@@ -144,7 +146,28 @@ public class Puzzles {
                 break;
 
             case "3":
-                break;
+               List<Usuario> users = interfazJSON.buscar();
+               sc.nextLine();
+               System.out.println("Escriba el nombre del usuario que desea bloquear");
+               nombre = sc.nextLine();
+
+               for (Usuario u : users) {
+                   if(u.getNombre().equals(nombre)){
+                       Usuario usuario1 = new Usuario(u.getNombre(), u.getApellido(), u.getEmail(), u.getPasswd(), u.getTipoUsuario(), u.getPuzzles());
+                       try{
+                           interfazJSON.bloquearUsuario(usuario1);
+
+                       }catch(DataFullException e){
+                           throw new RuntimeException(e);
+                       } catch (InsercionException   e) {
+                           throw new RuntimeException(e);
+                       }
+                   }
+
+               }
+
+
+
             case "4":
                break;
             default:

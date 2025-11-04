@@ -39,8 +39,8 @@ public class InterfazXML implements InterfazDAO {
     }
 
     @Override
-    public void buscarAtributo(String atributo) throws DataEmptyAccess {
-
+    public List<String> buscarAtributo(String atributo) throws DataEmptyAccess {
+        return List.of();
     }
 
     @Override
