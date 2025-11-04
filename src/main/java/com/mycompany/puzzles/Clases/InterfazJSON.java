@@ -4,11 +4,8 @@ import com.mycompany.puzzles.Excecpiones.*;
 import com.mycompany.puzzles.InterfacesDAO.InterfazDAO;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.sql.SQLOutput;
 import java.util.*;
 
 import jakarta.json.*;
@@ -287,14 +284,44 @@ public class InterfazJSON implements InterfazDAO {
         if(listaUsuarios.isEmpty()){
             throw new DataEmptyAccess("No hay datos");
         }
-
+        String caracteristica = "";
         for (Usuario usuario : listaUsuarios) {
             JsonObject user = usuario.toJson();
+            JsonArray puzzles = user.getJsonArray("puzzles");
 
-            if(user.containsKey(atributo)){
-                encontrado.add(user.get(atributo).toString());
+            for(int i = 0; i < puzzles.size(); i++){
+                JsonObject puzzle = puzzles.getJsonObject(i);
+
+                switch (atributo) {
+                    case "autor":
+                        caracteristica = puzzle.getString("autor", null);
+                        encontrado.add(caracteristica);
+                        break;
+
+                    case "media":
+                        caracteristica = String.valueOf(puzzle.getInt("media"));
+                        encontrado.add(caracteristica);
+                        break;
+
+                    case "piezas":
+                        caracteristica = String.valueOf(puzzle.getInt("piezas"));
+                        encontrado.add(caracteristica);
+                        break;
+
+                    case "dificultad":
+                        caracteristica = puzzle.getString("dificultad", null);
+                        encontrado.add(caracteristica);
+                        break;
+
+                    case "valoracion":
+                        caracteristica = String.valueOf(puzzle.getInt("valoracion"));
+                        encontrado.add(caracteristica);
+                        break;
+                }
+
             }
         }
+        Collections.sort(encontrado);
         return encontrado;
     }
 
@@ -364,11 +391,35 @@ public class InterfazJSON implements InterfazDAO {
 
 
             return true;
-    }
+    } // añadir duplicate exception
 
     @Override
-    public List<Object> getTopFive(Object obj) throws DataEmptyAccess {
-        return List.of();
+    public Puzzle[] getTopFive() throws DataEmptyAccess {
+
+        List<Usuario> listaUsuarios = buscar();
+        List<Puzzle> puzzle = new ArrayList<>();
+        List<Float> medias = new ArrayList<>();
+
+        for (Usuario usuarioAux : listaUsuarios) {
+            puzzle.addAll(usuarioAux.getPuzzles());
+        }
+
+        for (Puzzle puzzleAux : puzzle) {
+            medias.add(puzzleAux.getMedia());
+        }
+
+        // Ordenar de mayor a menor por media
+        puzzle.sort(Comparator.comparingDouble(Puzzle::getMedia).reversed());
+
+        // Crear un array con los 5 primeros (o menos si hay menos de 5)
+        int top = Math.min(5, puzzle.size());
+        Puzzle[] arrayPuzzle = new Puzzle[top];
+
+        for (int i = 0; i < top; i++) {
+            arrayPuzzle[i] = puzzle.get(i);
+        }
+
+        return arrayPuzzle;
     }
 
     @Override

@@ -7,10 +7,7 @@ package com.mycompany.puzzles;
 import com.mycompany.puzzles.Clases.InterfazJSON;
 import com.mycompany.puzzles.Clases.Puzzle;
 import com.mycompany.puzzles.Clases.Usuario;
-import com.mycompany.puzzles.Excecpiones.DataEmptyAccess;
-import com.mycompany.puzzles.Excecpiones.DataFullException;
-import com.mycompany.puzzles.Excecpiones.DuplicateEntry;
-import com.mycompany.puzzles.Excecpiones.InsercionException;
+import com.mycompany.puzzles.Excecpiones.*;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -32,7 +29,7 @@ public class Puzzles {
         System.out.println("1) Registrarse");
         System.out.println("2) Iniciar sesión");
        // System.out.println("3) Contraseña olvidada");
-        System.out.println("3) Bloquear usuario");
+        System.out.println("3) ranking");
         System.out.println("4) Salir");
 
         String email = "", passwd = "", opcion = sc.next();
@@ -84,9 +81,7 @@ public class Puzzles {
                     if (u.getEmail().equals(email) && u.getPasswd().equals(passwd)) {
                         encontrado = true;
                         usuarioEncontrado = u;
-                        System.out.println("holi" + usuarioEncontrado);
-                        System.out.println("Usuario encontrado:");
-                        System.out.println(u);
+                        System.out.println("hola" + usuarioEncontrado.getNombre());
                         break;
                     }
                 }
@@ -112,7 +107,7 @@ public class Puzzles {
                     int piezas = sc.nextInt();
                     sc.nextLine();
 
-                    System.out.println("Introduce la dificultad (Facil, Media, Dificil, Extremo):");
+                    System.out.println("Introduce la dificultad (Facil, Medio, Dificil, Extremo):");
                     String dificultadStr = sc.nextLine();
 
                     System.out.println("Introduce una breve descripción:");
@@ -146,29 +141,32 @@ public class Puzzles {
                 break;
 
             case "3":
-               List<Usuario> users = interfazJSON.buscar();
-               sc.nextLine();
-               System.out.println("Escriba el nombre del usuario que desea bloquear");
-               nombre = sc.nextLine();
-
-               for (Usuario u : users) {
-                   if(u.getNombre().equals(nombre)){
-                       Usuario usuario1 = new Usuario(u.getNombre(), u.getApellido(), u.getEmail(), u.getPasswd(), u.getTipoUsuario(), u.getPuzzles());
-                       try{
-                           interfazJSON.bloquearUsuario(usuario1);
-
-                       }catch(DataFullException e){
-                           throw new RuntimeException(e);
-                       } catch (InsercionException   e) {
-                           throw new RuntimeException(e);
-                       }
-                   }
-
-               }
-
-
+                Puzzle[] pzl = interfazJSON.getTopFive();
+                for (Puzzle p : pzl) {
+                    System.out.println(p);
+                }
+                break;
 
             case "4":
+                List<Usuario> users = interfazJSON.buscar();
+                sc.nextLine();
+                System.out.println("Escriba el nombre del usuario que desea bloquear");
+                nombre = sc.nextLine();
+
+                for (Usuario u : users) {
+                    if(u.getNombre().equals(nombre)){
+                        Usuario usuario1 = new Usuario(u.getNombre(), u.getApellido(), u.getEmail(), u.getPasswd(), u.getTipoUsuario(), u.getPuzzles());
+                        try{
+                            interfazJSON.bloquearUsuario(usuario1);
+
+                        }catch(DataFullException e){
+                            throw new RuntimeException(e);
+                        } catch (InsercionException   e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                }
                break;
             default:
                 System.out.println("Opción no válida.");

@@ -2,6 +2,7 @@ package com.mycompany.puzzles.Clases;
 
 import com.mycompany.puzzles.Excecpiones.*;
 import com.mycompany.puzzles.InterfacesDAO.InterfazDAO;
+import com.mycompany.puzzles.Puzzles;
 
 import java.util.List;
 
@@ -49,8 +50,8 @@ public class InterfazXML implements InterfazDAO {
     }
 
     @Override
-    public List<Object> getTopFive(Object obj) throws DataEmptyAccess {
-        return List.of();
+    public Puzzle[] getTopFive() throws DataEmptyAccess {
+        return null;
     }
 
     @Override

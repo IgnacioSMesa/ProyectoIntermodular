@@ -1,7 +1,9 @@
 package com.mycompany.puzzles.InterfacesDAO;
 
+import com.mycompany.puzzles.Clases.Puzzle;
 import com.mycompany.puzzles.Clases.Usuario;
 import com.mycompany.puzzles.Excecpiones.*;
+import com.mycompany.puzzles.Puzzles;
 
 import java.util.List;
 
@@ -78,7 +80,7 @@ public interface InterfazDAO {
      * @return una lista de los 5 puzzles mejor valorados del usuario
      * @throws DataEmptyAccess
      */
-    public List<Object> getTopFive(Object obj) throws DataEmptyAccess;
+    public Puzzle[] getTopFive() throws DataEmptyAccess;
 
     public String mejorTiempo();
 
