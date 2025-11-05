@@ -326,7 +326,7 @@ public class InterfazJSON implements InterfazDAO {
     }
 
     @Override
-    public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry,InsercionException {
+    public boolean bloquearUsuario(Object obj) throws DataFullException,InsercionException {
 
         Usuario usuario = (Usuario) obj;
         List<Usuario>  listaUsuarios = buscar();
@@ -424,6 +424,7 @@ public class InterfazJSON implements InterfazDAO {
 
     @Override
     public String mejorTiempo() {
+
         return "";
     }
 

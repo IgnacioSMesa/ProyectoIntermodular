@@ -73,7 +73,7 @@ public interface InterfazDAO {
      * @throws DataFullException
      * @throws DuplicateEntry
      */
-    public boolean bloquearUsuario(Object obj) throws DataFullException, DuplicateEntry, InsercionException;
+    public boolean bloquearUsuario(Object obj) throws DataFullException, InsercionException;
 
     /**
      *
