@@ -103,7 +103,7 @@ public class Usuario {
         for (Puzzle p : puzzles) {
             puzzlesArray.add(Json.createObjectBuilder()
                     .add("autor", p.getAutor())
-                    .add("media", p.getMedia())
+                    .add("tiempo", p.getTiempo())
                     .add("piezas", p.getPiezas())
                     .add("dificultad", p.getDificultad().toString())
                     .add("descripcion", p.getDescripcion())

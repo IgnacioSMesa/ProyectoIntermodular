@@ -83,8 +83,8 @@ public class InterfazXML implements InterfazDAO {
                 autor.appendChild(doc.createTextNode(p.getAutor()));
                 puzzleElem.appendChild(autor);
 
-                Element media = doc.createElement("media");
-                media.appendChild(doc.createTextNode(String.valueOf(p.getMedia())));
+                Element media = doc.createElement("tiempo");
+                media.appendChild(doc.createTextNode(String.valueOf(p.getTiempo())));
                 puzzleElem.appendChild(media);
 
                 Element piezas = doc.createElement("piezas");
@@ -241,7 +241,7 @@ public class InterfazXML implements InterfazDAO {
                     Element p = (Element) puzzlesNodes.item(j);
                     Puzzle puzzle = new Puzzle(
                             p.getElementsByTagName("autor").item(0).getTextContent(),
-                            Float.parseFloat(p.getElementsByTagName("media").item(0).getTextContent()),
+                            Integer.parseInt(p.getElementsByTagName("tiempo").item(0).getTextContent()),
                             Integer.parseInt(p.getElementsByTagName("piezas").item(0).getTextContent()),
                             Puzzle.Dificultades.valueOf(p.getElementsByTagName("dificultad").item(0).getTextContent()),
                             p.getElementsByTagName("descripcion").item(0).getTextContent(),
@@ -272,7 +272,7 @@ public class InterfazXML implements InterfazDAO {
             for (Puzzle p : usuario.getPuzzles()) {
                 switch (atributo) {
                     case "autor": encontrado.add(p.getAutor()); break;
-                    case "media": encontrado.add(String.valueOf(p.getMedia())); break;
+                    case "media": encontrado.add(String.valueOf(p.getTiempo())); break;
                     case "piezas": encontrado.add(String.valueOf(p.getPiezas())); break;
                     case "dificultad": encontrado.add(p.getDificultad().toString()); break;
                     case "valoracion": encontrado.add(String.valueOf(p.getValoracion())); break;
@@ -353,7 +353,7 @@ public class InterfazXML implements InterfazDAO {
 
         for (Usuario u : listaUsuarios) puzzles.addAll(u.getPuzzles());
 
-        puzzles.sort(Comparator.comparingDouble(Puzzle::getMedia).reversed());
+        puzzles.sort(Comparator.comparingDouble(Puzzle::getTiempo).reversed());
         int top = Math.min(5, puzzles.size());
         Puzzle[] arrayPuzzle = new Puzzle[top];
         for (int i = 0; i < top; i++) arrayPuzzle[i] = puzzles.get(i);

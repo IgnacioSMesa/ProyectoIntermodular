@@ -5,7 +5,7 @@ public class Puzzle {
     public enum Dificultades {Facil, Medio, Dificil, Extremo};
 
     private String autor;
-    private float media;
+    private int tiempo;
     private int piezas;
     private Dificultades dificultad;
     private String descripcion;
@@ -15,9 +15,9 @@ public class Puzzle {
     //Constructores
     public Puzzle() {}
 
-    public Puzzle(String autor, float media, int piezas, Dificultades dificultad, String descripcion, boolean color, int valoracion) {
+    public Puzzle(String autor, int tiempo, int piezas, Dificultades dificultad, String descripcion, boolean color, int valoracion) {
         this.autor = autor;
-        this.media = media;
+        this.tiempo = tiempo;
         this.piezas = piezas;
         this.dificultad = dificultad;
         this.descripcion = descripcion;
@@ -30,8 +30,8 @@ public class Puzzle {
         return autor;
     }
 
-    public float getMedia() {
-        return media;
+    public int getTiempo() {
+        return tiempo;
     }
 
     public int getPiezas() {
@@ -59,8 +59,8 @@ public class Puzzle {
         this.autor = autor;
     }
 
-    public void setMedia(float media) {
-        this.media = media;
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
     }
 
     public void setPiezas(int piezas) {
@@ -85,15 +85,23 @@ public class Puzzle {
 
     @Override
     public String toString() {
-        return "Puzzle{" +
-                "autor='" + autor + '\'' +
-                ", media=" + media +
-                ", piezas=" + piezas +
-                ", dificultad=" + dificultad +
-                ", descripcion='" + descripcion + '\'' +
-                ", color=" + color +
-                ", valoracion=" + valoracion +
-                '}';
+        return String.format(
+                "🧩 Puzzle\n" +
+                        " ├ Autor: %s\n" +
+                        " ├ Tiempo: %d horas\n" +
+                        " ├ Piezas: %d\n" +
+                        " ├ Dificultad: %s\n" +
+                        " ├ Descripción: %s\n" +
+                        " ├ Color: %s\n" +
+                        " └ Valoración: %d/5",
+                autor,
+                tiempo,
+                piezas,
+                dificultad,
+                descripcion,
+                color ? "Sí" : "No",
+                valoracion
+        );
     }
 
 }

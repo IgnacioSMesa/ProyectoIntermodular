@@ -97,7 +97,7 @@ public class PuzzlesXML {
                     String autor = sc.nextLine();
 
                     System.out.println("Introduce la media del puzzle (ejemplo: 4,5):");
-                    float media = sc.nextFloat();
+                    int tiempo = sc.nextInt();
 
                     System.out.println("Introduce el número de piezas:");
                     int piezas = sc.nextInt();
@@ -116,7 +116,7 @@ public class PuzzlesXML {
                     int valoracion = sc.nextInt();
 
                     // Crear el nuevo Puzzle
-                    Puzzle nuevoPuzzle = new Puzzle(autor, media, piezas, Puzzle.Dificultades.valueOf(dificultadStr), descripcion, color, valoracion);
+                    Puzzle nuevoPuzzle = new Puzzle(autor, tiempo, piezas, Puzzle.Dificultades.valueOf(dificultadStr), descripcion, color, valoracion);
 
                     // Añadir a la lista del usuario
                     usuarioEncontrado.getPuzzles().add(nuevoPuzzle);

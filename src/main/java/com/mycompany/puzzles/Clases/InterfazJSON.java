@@ -62,7 +62,7 @@ public class InterfazJSON implements InterfazDAO {
         for (Puzzle p : usuario.getPuzzles()) {
             JsonObject jsonPuzzle = Json.createObjectBuilder()
                     .add("autor", p.getAutor())
-                    .add("media", p.getMedia())
+                    .add("tiempo", p.getTiempo())
                     .add("piezas", p.getPiezas())
                     .add("dificultad", p.getDificultad().toString())
                     .add("descripcion", p.getDescripcion())
@@ -243,7 +243,7 @@ public class InterfazJSON implements InterfazDAO {
                     Puzzle p = new Puzzle();
 
                     p.setAutor(jsonPuzzle.getString("autor"));
-                    p.setMedia((float) jsonPuzzle.getJsonNumber("media").doubleValue());
+                    p.setTiempo(jsonPuzzle.getInt("tiempo", 0));
                     p.setPiezas(jsonPuzzle.getInt("piezas", 0));
                     p.setDificultad(Puzzle.Dificultades.valueOf(jsonPuzzle.getString("dificultad")));
                     p.setDescripcion(jsonPuzzle.getString("descripcion"));
@@ -298,8 +298,8 @@ public class InterfazJSON implements InterfazDAO {
                         encontrado.add(caracteristica);
                         break;
 
-                    case "media":
-                        caracteristica = String.valueOf(puzzle.getInt("media"));
+                    case "tiempo":
+                        caracteristica = String.valueOf(puzzle.getInt("tiempo"));
                         encontrado.add(caracteristica);
                         break;
 
@@ -326,7 +326,7 @@ public class InterfazJSON implements InterfazDAO {
     }
 
     @Override
-    public boolean bloquearUsuario(Object obj) throws DataFullException,InsercionException {
+    public boolean bloquearUsuario(Object obj) throws DataFullException, InsercionException {
 
         Usuario usuario = (Usuario) obj;
         List<Usuario>  listaUsuarios = buscar();
@@ -390,7 +390,7 @@ public class InterfazJSON implements InterfazDAO {
         }
 
 
-            return true;
+        return true;
     } // añadir duplicate exception
 
     @Override
@@ -398,18 +398,18 @@ public class InterfazJSON implements InterfazDAO {
 
         List<Usuario> listaUsuarios = buscar();
         List<Puzzle> puzzle = new ArrayList<>();
-        List<Float> medias = new ArrayList<>();
+        List<Integer> medias = new ArrayList<>();
 
         for (Usuario usuarioAux : listaUsuarios) {
             puzzle.addAll(usuarioAux.getPuzzles());
         }
 
         for (Puzzle puzzleAux : puzzle) {
-            medias.add(puzzleAux.getMedia());
+            medias.add(puzzleAux.getTiempo());
         }
 
         // Ordenar de mayor a menor por media
-        puzzle.sort(Comparator.comparingDouble(Puzzle::getMedia).reversed());
+        puzzle.sort(Comparator.comparingDouble(Puzzle::getTiempo).reversed());
 
         // Crear un array con los 5 primeros (o menos si hay menos de 5)
         int top = Math.min(5, puzzle.size());
@@ -424,8 +424,26 @@ public class InterfazJSON implements InterfazDAO {
 
     @Override
     public String mejorTiempo() {
+        List<String> tiempos = buscarAtributo("tiempo");
+        List<Integer> tiemposInt = new ArrayList<>();
 
-        return "";
+        for (String tiempo : tiempos) {
+            try {
+                tiemposInt.add(Integer.parseInt(tiempo)); // convierte cada String a int
+            } catch (NumberFormatException e) {
+                System.err.println("Valor de tiempo no válido: " + tiempo);
+            }
+        }
+
+        if (tiemposInt.isEmpty()) {
+            return "No hay tiempos disponibles";
+        }
+
+        // Ordenar de menor a mayor → el mejor tiempo es el primero
+        tiemposInt.sort(Comparator.naturalOrder());
+        int mejor = tiemposInt.get(0);
+
+        return String.valueOf(mejor);
     }
 
 }
