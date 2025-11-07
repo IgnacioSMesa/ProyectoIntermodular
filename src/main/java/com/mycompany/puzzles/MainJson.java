@@ -13,7 +13,7 @@ import java.util.Scanner;
  * 🧩 Proyecto Puzzles
  * @author Ignacio y Natalia
  */
-public class Puzzles {
+public class MainJson {
 
     static Scanner sc = new Scanner(System.in);
 
@@ -71,7 +71,6 @@ public class Puzzles {
                         System.out.println("❌ Error al insertar el usuario: " + e.getMessage());
                     }
                     esperarEnter();
-                    break;
 
                 case "2": // LOGIN
                     if (email.equals("") || passwd.equals("")) {
@@ -173,7 +172,7 @@ public class Puzzles {
                     break;
 
                 case "5": // MEJOR TIEMPO
-                    System.out.println("\n⏳ " + interfazJSON.mejorTiempo());
+                    System.out.println("\n⏳ El mejor tiempo registrado es: " + interfazJSON.mejorTiempo());
                     esperarEnter();
                     break;
 
@@ -191,7 +190,6 @@ public class Puzzles {
                 case "7": // SALIR
                     System.out.println("\n👋 ¡Gracias por usar Puzzles! Hasta la próxima 🧩");
                     System.exit(0);
-                    break;
 
                 default:
                     System.out.println("❌ Opción no válida. Intenta de nuevo.");

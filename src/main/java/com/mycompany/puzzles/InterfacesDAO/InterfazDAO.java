@@ -3,7 +3,6 @@ package com.mycompany.puzzles.InterfacesDAO;
 import com.mycompany.puzzles.Clases.Puzzle;
 import com.mycompany.puzzles.Clases.Usuario;
 import com.mycompany.puzzles.Excecpiones.*;
-import com.mycompany.puzzles.Puzzles;
 
 import java.util.List;
 

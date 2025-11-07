@@ -3,12 +3,27 @@ package com.mycompany.puzzles.Clases;
 import com.mycompany.puzzles.Excecpiones.*;
 import com.mycompany.puzzles.InterfacesDAO.InterfazDAO;
 
-import java.io.*;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonWriter;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonValue;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
 
-import jakarta.json.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class InterfazJSON implements InterfazDAO {
 

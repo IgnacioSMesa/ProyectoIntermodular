@@ -2,13 +2,25 @@ package com.mycompany.puzzles.Clases;
 
 import com.mycompany.puzzles.Excecpiones.*;
 import com.mycompany.puzzles.InterfacesDAO.InterfazDAO;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-import java.util.*;
+
+import java.io.File;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class InterfazXML implements InterfazDAO {
 
@@ -83,9 +95,9 @@ public class InterfazXML implements InterfazDAO {
                 autor.appendChild(doc.createTextNode(p.getAutor()));
                 puzzleElem.appendChild(autor);
 
-                Element media = doc.createElement("tiempo");
-                media.appendChild(doc.createTextNode(String.valueOf(p.getTiempo())));
-                puzzleElem.appendChild(media);
+                Element tiempo = doc.createElement("tiempo");
+                tiempo.appendChild(doc.createTextNode(String.valueOf(p.getTiempo())));
+                puzzleElem.appendChild(tiempo);
 
                 Element piezas = doc.createElement("piezas");
                 piezas.appendChild(doc.createTextNode(String.valueOf(p.getPiezas())));
@@ -194,7 +206,8 @@ public class InterfazXML implements InterfazDAO {
 
             for (int i = 0; i < usuarios.getLength(); i++) {
                 Element u = (Element) usuarios.item(i);
-                if (u.getElementsByTagName("email").item(0).getTextContent().equalsIgnoreCase(usuarioActualizado.getEmail())) {
+                if (u.getElementsByTagName("email").item(0).getTextContent()
+                        .equalsIgnoreCase(usuarioActualizado.getEmail())) {
                     u.getParentNode().removeChild(u);
                     encontrado = true;
                     break;
@@ -203,7 +216,14 @@ public class InterfazXML implements InterfazDAO {
 
             if (!encontrado) throw new ObjectNotExist("El usuario no existe en el archivo XML");
 
-            // Insertar el actualizado
+            // Guardar el DOM sin el usuario viejo
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(fichero);
+            transformer.transform(source, result);
+
+            // Ahora sí, insertar el nuevo usuario (el XML ya no lo contiene)
             insertar(usuarioActualizado);
             return true;
 
@@ -272,7 +292,7 @@ public class InterfazXML implements InterfazDAO {
             for (Puzzle p : usuario.getPuzzles()) {
                 switch (atributo) {
                     case "autor": encontrado.add(p.getAutor()); break;
-                    case "media": encontrado.add(String.valueOf(p.getTiempo())); break;
+                    case "tiempo": encontrado.add(String.valueOf(p.getTiempo())); break;
                     case "piezas": encontrado.add(String.valueOf(p.getPiezas())); break;
                     case "dificultad": encontrado.add(p.getDificultad().toString()); break;
                     case "valoracion": encontrado.add(String.valueOf(p.getValoracion())); break;
@@ -362,6 +382,25 @@ public class InterfazXML implements InterfazDAO {
 
     @Override
     public String mejorTiempo() {
-        return "";
+        List<String> tiempos = buscarAtributo("tiempo");
+        List<Integer> tiemposInt = new ArrayList<>();
+
+        for (String tiempo : tiempos) {
+            try {
+                tiemposInt.add(Integer.parseInt(tiempo)); // convierte cada String a int
+            } catch (NumberFormatException e) {
+                System.err.println("Valor de tiempo no válido: " + tiempo);
+            }
+        }
+
+        if (tiemposInt.isEmpty()) {
+            return "No hay tiempos disponibles";
+        }
+
+        // Ordenar de menor a mayor → el mejor tiempo es el primero
+        tiemposInt.sort(Comparator.naturalOrder());
+        int mejor = tiemposInt.get(0);
+
+        return String.valueOf(mejor);
     }
 }
