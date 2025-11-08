@@ -282,7 +282,7 @@ public class InterfazJSON implements InterfazDAO {
 
             }
 
-        } catch (IOException e) {
+        } catch (IOException | ArgumentException e) {
             throw new DataEmptyAccess("Error leyendo el archivo JSON", e);
         }
 
