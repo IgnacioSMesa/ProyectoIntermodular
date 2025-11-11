@@ -29,7 +29,7 @@ public class InterfazXML implements InterfazDAO {
     private File ficheroBloq = new File("src/main/resources/Ficheros/usuariosBloqueados.xml");
 
     @Override
-    public boolean lleno() {
+    public boolean lleno(File fichero) {
 
         // Establecemos un tamaño máximo y retornamos true cuando supere el tamaño
         long TAM_MAX = 5L * 1024 * 1024 * 1024; // 5 GB
@@ -37,7 +37,7 @@ public class InterfazXML implements InterfazDAO {
     }
 
     @Override
-    public boolean vacio() {
+    public boolean vacio(File fichero) {
         if (fichero.exists()) {
             // Retorna true si el fichero no tiene nada
             if (fichero.length() == 0) {
@@ -59,7 +59,7 @@ public class InterfazXML implements InterfazDAO {
         try {
 
             // Comprobación de si el fichero está lleno
-            if (lleno()) throw new DataFullException("No hay espacio en el fichero");
+            if (lleno(fichero)) throw new DataFullException("No hay espacio en el fichero");
 
 
             // Se crea una fábrica de constructores de documentos XML (DOM)
@@ -70,7 +70,7 @@ public class InterfazXML implements InterfazDAO {
             Document doc; // Variable que contendrá el documento XML en memoria
 
             // Si el fichero XML está vacío
-            if (vacio()) {
+            if (vacio(fichero)) {
                 // Se crea un nuevo documento XML en blanco
                 doc = builder.newDocument();
                 // Se crea el elemento raíz llamado "usuarios"
@@ -202,7 +202,7 @@ public class InterfazXML implements InterfazDAO {
 
         try {
             // Si el fichero está vacío (no hay usuarios registrados), se lanza una excepción
-            if (vacio()) {
+            if (vacio(fichero)) {
                 throw new ObjectNotExist("No hay usuarios para eliminar");
             }
 
@@ -279,7 +279,7 @@ public class InterfazXML implements InterfazDAO {
 
         try {
             // Si el archivo XML está vacío, no hay nada que actualizar → se lanza excepción
-            if (vacio()) {
+            if (vacio(fichero)) {
                 throw new ObjectNotExist("Archivo vacío");
             }
 
@@ -343,7 +343,7 @@ public class InterfazXML implements InterfazDAO {
         List<Usuario> listaUsuarios = new ArrayList<>();
 
         // Si el fichero XML está vacío, no hay datos que leer → se lanza excepción
-        if (vacio())
+        if (vacio(fichero))
             throw new DataEmptyAccess("No hay datos");
 
         try {
@@ -476,7 +476,7 @@ public class InterfazXML implements InterfazDAO {
     private boolean insertarBloqueado(Usuario usuario) throws InsercionException, DataFullException {
         try {
             // Si el fichero está lleno (según alguna regla de capacidad), lanza una excepción
-            if (lleno()) {
+            if (lleno(ficheroBloq)) {
                 throw new DataFullException("No hay espacio en el fichero");
             }
 

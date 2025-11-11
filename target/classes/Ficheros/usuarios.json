@@ -1,1 +1,1 @@
-[{"nombre":"ignacio","apellido":"sanz","email":"ignacio@gmail.com","passwd":"123456789","tipo":"Usuario","puzzles":[]}]
+[{"nombre":"Natalia","apellido":"Viñé","email":"natalia@gmail.com","passwd":"natalia22","tipo":"Usuario","puzzles":[{"autor":"nat","tiempo":1,"piezas":500,"dificultad":"Dificil","descripcion":"ewd","color":true,"valoracion":4},{"autor":"nat","tiempo":6,"piezas":1000,"dificultad":"Facil","descripcion":"wreg","color":false,"valoracion":5}]}]

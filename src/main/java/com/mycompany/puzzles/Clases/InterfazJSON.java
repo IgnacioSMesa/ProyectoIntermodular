@@ -32,7 +32,7 @@ public class InterfazJSON implements InterfazDAO {
     private File ficheroBloq = new File("src/main/resources/Ficheros/usuariosBloqueados.json");
 
     @Override
-    public boolean lleno() {
+    public boolean lleno(File fichero) {
         // Establecemos un tamaño máximo para el fichero
         long TAM_MAX = 5L * 1024 * 1024 * 1024; // 5 GB en bytes
 
@@ -42,7 +42,7 @@ public class InterfazJSON implements InterfazDAO {
     }
 
     @Override
-    public boolean vacio() {
+    public boolean vacio(File fichero) {
 
         if (fichero.exists()) {
             // Retorna true si el fichero no tiene nada
@@ -63,7 +63,7 @@ public class InterfazJSON implements InterfazDAO {
         Usuario usuario = (Usuario) obj;
 
         // Comprobamos que el usuario a insertar no este ya creado, nosotros lo hacemos con el campo email
-        if (!vacio()) {
+        if (!vacio(fichero)) {
             List<Usuario> usuarioExiste = buscar();
             for (Usuario u : usuarioExiste) {
                 if (u.getEmail().equals(usuario.getEmail())) {
@@ -72,7 +72,7 @@ public class InterfazJSON implements InterfazDAO {
             }
         }
         // Comprobar si esta lleno
-        if (lleno()) {
+        if (lleno(fichero)) {
             throw new DataFullException("No hay espacio en el fichero");
         }
 
@@ -115,7 +115,7 @@ public class InterfazJSON implements InterfazDAO {
         ) {
 
             // Si el fichero está vacío, estamos creando un JSON nuevo
-            if (vacio()) {
+            if (vacio(fichero)) {
 
                 // Abrimos un array JSON
                 fileWriter.write("[");
@@ -164,6 +164,10 @@ public class InterfazJSON implements InterfazDAO {
     @Override
     public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException, ObjectNotExist {
 
+        if (vacio(fichero)) {
+            throw new ObjectNotExist("No hay usuarios para eliminar");
+        }
+
         // Comprobación de argumentos
         if (email == null || email.isEmpty()) {
             throw new DataEmptyAccess("El email está vacío");
@@ -171,7 +175,6 @@ public class InterfazJSON implements InterfazDAO {
 
         List<Usuario> usuarios = buscar(); // Cargar todos los usuarios desde el fichero
         boolean eliminado = false; // Variable que nos dirá si se ha eliminado
-
 
         for (Usuario u : usuarios) {
             if (u.getEmail().equalsIgnoreCase(email)) {
@@ -270,7 +273,7 @@ public class InterfazJSON implements InterfazDAO {
         List<Usuario> listaUsuarios = new ArrayList<>();
 
         // Comprobamos si el fichero está vacío
-        if (vacio()){
+        if (vacio(fichero)){
             throw new DataEmptyAccess("No hay datos");
         }
 
@@ -392,7 +395,7 @@ public class InterfazJSON implements InterfazDAO {
         Usuario usuario = (Usuario) obj;
         List<Usuario>  listaUsuarios = buscar();
 
-        if (lleno()) {
+        if (lleno(ficheroBloq)) {
             throw new DataFullException("No hay espacio en el fichero");
         }
         // Comprobamos el usuario
@@ -424,7 +427,7 @@ public class InterfazJSON implements InterfazDAO {
         try (FileWriter fileWriter = new FileWriter(ficheroBloq.getAbsolutePath(), true);
              JsonWriter jsonWriter = Json.createWriter(fileWriter)) {
 
-            if (vacio()) {
+            if (vacio(ficheroBloq)) {
 
                 fileWriter.write("[");
                 jsonWriter.writeObject(jsonUsuario);

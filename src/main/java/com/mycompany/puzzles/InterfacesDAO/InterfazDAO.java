@@ -4,6 +4,7 @@ import com.mycompany.puzzles.Clases.Puzzle;
 import com.mycompany.puzzles.Clases.Usuario;
 import com.mycompany.puzzles.Excecpiones.*;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -16,13 +17,13 @@ public interface InterfazDAO {
      *
      * @return true si está lleno false si hay espacio
      */
-    public boolean lleno();
+    public boolean lleno(File fichero);
 
     /**
      *
      * @return true si está vacío
      */
-    public boolean vacio();
+    public boolean vacio(File fichero);
 
     /**
      *

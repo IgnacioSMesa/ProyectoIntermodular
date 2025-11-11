@@ -17,14 +17,13 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner sc = new Scanner(System.in);
+    static String email = "", passwd = "";
 
     public static void main(String args[]) throws ArgumentException {
 
         InterfazJSON interfazJSON = new InterfazJSON();
         InterfazXML interfazXML = new InterfazXML();
         OperacionesFicheros operacionesFicheros = new OperacionesFicheros();
-
-        String email = "", passwd = "";
 
         int sistema = 0;
 
@@ -42,18 +41,8 @@ public class Main {
 
                     do {
 
-                        System.out.println("\n╔════════════════ MENÚ PRINCIPAL ════════════════╗");
-                        System.out.println("║ 1️⃣  Registrarse                                ║");
-                        System.out.println("║ 2️⃣  Iniciar sesión                             ║");
-                        System.out.println("║ 3️⃣  Ver Ranking (Top 5)                        ║");
-                        System.out.println("║ 4️⃣  Bloquear usuario                           ║");
-                        System.out.println("║ 5️⃣  Mostrar mejor tiempo de todos los puzzles  ║");
-                        System.out.println("║ 6️⃣  Cerrar sesión                              ║");
-                        System.out.println("║ 7️⃣  Salir                                      ║");
-                        System.out.println("╚════════════════════════════════════════════════╝");
-                        System.out.print("👉 Elige una opción: ");
+                        String opcion = menu();
 
-                        String opcion = sc.next();
                         switch (opcion) {
 
                             case "1": // REGISTRO
@@ -84,7 +73,6 @@ public class Main {
                                 } catch (InsercionException | DataFullException | DuplicateEntry e) {
                                     System.out.println("❌ Error al insertar el usuario: " + e.getMessage());
                                 }
-                                esperarEnter();
 
                             case "2": // LOGIN
                                 if (email.equals("") || passwd.equals("")) {
@@ -157,7 +145,9 @@ public class Main {
                                 } else {
                                     System.out.println("🟡 No se insertó ningún puzzle.");
                                 }
+
                                 esperarEnter();
+
                                 break;
 
                             case "3": // RANKING
@@ -173,7 +163,7 @@ public class Main {
                                 List<Usuario> users = interfazJSON.buscar();
                                 sc.nextLine();
                                 System.out.print("🚫 Escriba el nombre del usuario que desea bloquear: ");
-                                String emailBloquear = sc.nextLine();
+                                String emailBloquear = sc.next();
 
                                 for (Usuario u : users) {
                                     if (u.getEmail().equalsIgnoreCase(emailBloquear)) {
@@ -194,14 +184,7 @@ public class Main {
                                 break;
 
                             case "6": // CERRAR SESIÓN
-                                if (email.equals("") || passwd.equals("")) {
-                                    System.out.println("⚠️ No hay ninguna sesión activa para cerrar.");
-                                } else {
-                                    email = "";
-                                    passwd = "";
-                                    System.out.println("👋 Sesión cerrada correctamente.");
-                                }
-                                esperarEnter();
+                                cerrarSesion();
                                 break;
 
                             case "7": // SALIR
@@ -221,18 +204,8 @@ public class Main {
 
                     do {
 
-                        System.out.println("\n╔════════════════ MENÚ PRINCIPAL ════════════════╗");
-                        System.out.println("║ 1️⃣  Registrarse                                ║");
-                        System.out.println("║ 2️⃣  Iniciar sesión                             ║");
-                        System.out.println("║ 3️⃣  Ver Ranking (Top 5)                        ║");
-                        System.out.println("║ 4️⃣  Bloquear usuario                           ║");
-                        System.out.println("║ 5️⃣  Mostrar mejor tiempo de todos los puzzles  ║");
-                        System.out.println("║ 6️⃣  Cerrar sesión                              ║");
-                        System.out.println("║ 7️⃣  Salir                                      ║");
-                        System.out.println("╚════════════════════════════════════════════════╝");
-                        System.out.print("👉 Elige una opción: ");
+                        String opcion = menu();
 
-                        String opcion = sc.next();
                         switch (opcion) {
 
                             case "1": // REGISTRO
@@ -263,7 +236,6 @@ public class Main {
                                 } catch (InsercionException | DataFullException | DuplicateEntry e) {
                                     System.out.println("❌ Error al insertar el usuario: " + e.getMessage());
                                 }
-                                esperarEnter();
 
                             case "2": // LOGIN
                                 if (email.equals("") || passwd.equals("")) {
@@ -330,12 +302,14 @@ public class Main {
                                     try {
                                         interfazXML.actualizar(usuarioEncontrado);
                                         System.out.println("✅ Puzzle añadido correctamente y guardado en el fichero.");
+                                        sc.nextLine();
                                     } catch (Exception e) {
                                         System.out.println("⚠️ Error al guardar el puzzle: " + e.getMessage());
                                     }
                                 } else {
                                     System.out.println("🟡 No se insertó ningún puzzle.");
                                 }
+
                                 esperarEnter();
                                 break;
 
@@ -352,7 +326,7 @@ public class Main {
                                 List<Usuario> users = interfazXML.buscar();
                                 sc.nextLine();
                                 System.out.print("🚫 Escriba el nombre del usuario que desea bloquear: ");
-                                String emailBloquear = sc.nextLine();
+                                String emailBloquear = sc.next();
 
                                 for (Usuario u : users) {
                                     if (u.getEmail().equalsIgnoreCase(emailBloquear)) {
@@ -373,14 +347,7 @@ public class Main {
                                 break;
 
                             case "6": // CERRAR SESIÓN
-                                if (email.equals("") || passwd.equals("")) {
-                                    System.out.println("⚠️ No hay ninguna sesión activa para cerrar.");
-                                } else {
-                                    email = "";
-                                    passwd = "";
-                                    System.out.println("👋 Sesión cerrada correctamente.");
-                                }
-                                esperarEnter();
+                                cerrarSesion();
                                 break;
 
                             case "7": // SALIR
@@ -411,5 +378,33 @@ public class Main {
         if (sc.hasNextLine()) sc.nextLine();
         sc.nextLine();
 
+    }
+
+    private static String menu() {
+        System.out.println("\n╔════════════════ MENÚ PRINCIPAL ════════════════╗");
+        System.out.println("║ 1️⃣  Registrarse                                ║");
+        System.out.println("║ 2️⃣  Iniciar sesión                             ║");
+        System.out.println("║ 3️⃣  Ver Ranking (Top 5)                        ║");
+        System.out.println("║ 4️⃣  Bloquear usuario                           ║");
+        System.out.println("║ 5️⃣  Mostrar mejor tiempo de todos los puzzles  ║");
+        System.out.println("║ 6️⃣  Cerrar sesión                              ║");
+        System.out.println("║ 7️⃣  Salir                                      ║");
+        System.out.println("╚════════════════════════════════════════════════╝");
+        System.out.print("👉 Elige una opción: ");
+
+        String opcion = sc.next();
+
+        return opcion;
+    }
+
+    private static void cerrarSesion() {
+        if (email.equals("") || passwd.equals("")) {
+            System.out.println("⚠️ No hay ninguna sesión activa para cerrar.");
+        } else {
+            email = "";
+            passwd = "";
+            System.out.println("👋 Sesión cerrada correctamente.");
+        }
+        esperarEnter();
     }
 }
