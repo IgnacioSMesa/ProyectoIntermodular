@@ -256,7 +256,7 @@ public class Main {
 
                                 try {
                                     if (interfazXML.insertar(usuario)) {
-                                        System.out.println("✅ Usuario registrado correctamente en usuarios.json.");
+                                        System.out.println("✅ Usuario registrado correctamente en usuarios.xml.");
                                     } else {
                                         System.out.println("⚠️ No se ha podido registrar el usuario.");
                                     }
