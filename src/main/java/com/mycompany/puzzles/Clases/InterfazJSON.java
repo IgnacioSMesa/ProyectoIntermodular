@@ -27,14 +27,16 @@ import java.util.List;
 
 public class InterfazJSON implements InterfazDAO {
 
+    // Ficheros de destino
     private File fichero = new File("src/main/resources/Ficheros/usuarios.json");
     private File ficheroBloq = new File("src/main/resources/Ficheros/usuariosBloqueados.json");
 
     @Override
     public boolean lleno() {
-
+        // Establecemos un tamaño máximo para el fichero
         long TAM_MAX = 5L * 1024 * 1024 * 1024; // 5 GB en bytes
 
+        // Retorna true si el tamaño del fichero supera al máximo establecido
         return fichero.length() >= TAM_MAX;
 
     }
@@ -43,7 +45,7 @@ public class InterfazJSON implements InterfazDAO {
     public boolean vacio() {
 
         if (fichero.exists()) {
-
+            // Retorna true si el fichero no tiene nada
             if (fichero.length() == 0) {
                 return true;
             } else  {
@@ -57,9 +59,10 @@ public class InterfazJSON implements InterfazDAO {
 
     @Override
     public boolean insertar(Object obj) throws InsercionException, DataFullException, DuplicateEntry {
-
+        // Casteamos el obj a un objeto Usuario
         Usuario usuario = (Usuario) obj;
 
+        // Comprobamos que el usuario a insertar no este ya creado, nosotros lo hacemos con el campo email
         if (!vacio()) {
             List<Usuario> usuarioExiste = buscar();
             for (Usuario u : usuarioExiste) {
@@ -68,13 +71,17 @@ public class InterfazJSON implements InterfazDAO {
                 }
             }
         }
-
+        // Comprobar si esta lleno
         if (lleno()) {
             throw new DataFullException("No hay espacio en el fichero");
         }
 
+
+        // Construimos un array JSON para los puzzles del usuario
         JsonArrayBuilder puzzlesArrayBuilder = Json.createArrayBuilder();
+
         for (Puzzle p : usuario.getPuzzles()) {
+            // Para cada puzzle, creamos un objeto JSON con todos sus campos
             JsonObject jsonPuzzle = Json.createObjectBuilder()
                     .add("autor", p.getAutor())
                     .add("tiempo", p.getTiempo())
@@ -84,50 +91,71 @@ public class InterfazJSON implements InterfazDAO {
                     .add("color", p.isColor())
                     .add("valoracion", p.getValoracion())
                     .build();
+
+            // Añadimos el puzzle al array JSON
             puzzlesArrayBuilder.add(jsonPuzzle);
         }
 
+        // Creamos el objeto JSON principal del usuario
         JsonObject jsonUsuario = Json.createObjectBuilder()
                 .add("nombre", usuario.getNombre())
                 .add("apellido", usuario.getApellido())
                 .add("email", usuario.getEmail())
                 .add("passwd", usuario.getPasswd())
                 .add("tipo", String.valueOf(Usuario.TipoUsuario.Usuario))
+                // Añadimos la lista de puzzles creada arriba
                 .add("puzzles", puzzlesArrayBuilder)
                 .build();
 
-        try (FileWriter fileWriter = new FileWriter(fichero.getAbsolutePath(), true);
-             JsonWriter jsonWriter = Json.createWriter(fileWriter)) {
+        try (
+                // Abrimos el FileWriter en modo append (añadir al final)
+                FileWriter fileWriter = new FileWriter(fichero.getAbsolutePath(), true);
+                // JsonWriter usará ese FileWriter para escribir JSON
+                JsonWriter jsonWriter = Json.createWriter(fileWriter)
+        ) {
 
+            // Si el fichero está vacío, estamos creando un JSON nuevo
             if (vacio()) {
 
+                // Abrimos un array JSON
                 fileWriter.write("[");
+                // Escribimos el usuario como primer elemento
                 jsonWriter.writeObject(jsonUsuario);
+                // Cerramos el array JSON
                 fileWriter.write("]");
 
             } else {
 
+                // Leemos el contenido actual del archivo JSON
                 String content = new String(Files.readAllBytes(fichero.toPath()), StandardCharsets.UTF_8);
 
+                // Si el archivo termina en ']' quitamos ese último corchete
+                // para poder añadir otro usuario al array
                 if (content.trim().endsWith("]")) {
                     int lastIndex = content.lastIndexOf("]");
                     content = content.substring(0, lastIndex);
                 }
 
+                // Si el contenido ya tenía elementos antes, añadimos una coma
                 if (content.trim().length() > 1) {
                     content += ",";
                 }
 
+                // Escribimos el contenido modificado (sin el corchete final)
                 Files.write(fichero.toPath(), content.getBytes(StandardCharsets.UTF_8));
 
+                // Añadimos el nuevo usuario
                 jsonWriter.writeObject(jsonUsuario);
-                fileWriter.write("]");
 
+                // Cerramos de nuevo el array JSON
+                fileWriter.write("]");
             }
 
             return true;
 
         } catch (IOException e) {
+
+            // Cualquier error de IO se encapsula en tu excepción personalizada
             throw new InsercionException("Error al insertar" + e);
         }
 
@@ -136,25 +164,29 @@ public class InterfazJSON implements InterfazDAO {
     @Override
     public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException, ObjectNotExist {
 
+        // Comprobación de argumentos
         if (email == null || email.isEmpty()) {
             throw new DataEmptyAccess("El email está vacío");
         }
 
         List<Usuario> usuarios = buscar(); // Cargar todos los usuarios desde el fichero
-        boolean eliminado = false;
+        boolean eliminado = false; // Variable que nos dirá si se ha eliminado
+
 
         for (Usuario u : usuarios) {
             if (u.getEmail().equalsIgnoreCase(email)) {
-                try {
 
+                try {
+                    // Leemos el contenido
                     String content = new String(Files.readAllBytes(fichero.toPath()), StandardCharsets.UTF_8);
 
-                    // Parsear el JSON como un array
+                    // Creamos el Json reader y declaramos el objeto json array
                     JsonReader reader = Json.createReader(new StringReader(content));
                     JsonArray jsonArray = reader.readArray();
 
-                    // Crear un nuevo array sin el usuario que tenga ese email
                     JsonArrayBuilder nuevoArray = Json.createArrayBuilder();
+
+                    // Leemos el array y establecemos un jsonObjetc con el usuario
                     for (JsonValue value : jsonArray) {
                         JsonObject usuario = value.asJsonObject();
                         String emails = usuario.getString("email", "");
@@ -163,23 +195,18 @@ public class InterfazJSON implements InterfazDAO {
                         }
                     }
 
-                    // Escribir el nuevo array al archivo (sobrescribiendo el anterior)
+                    // reescribimos el fichero sin el usuario que haya encontrado
                     try (FileWriter fileWriter = new FileWriter(fichero, false);
                          JsonWriter jsonWriter = Json.createWriter(fileWriter)) {
                         jsonWriter.writeArray(nuevoArray.build());
-                    } catch (Exception e) {
-                        throw new DeleteException("Error al eliminar" + e);
                     }
 
                     eliminado = true;
-                    System.out.println("Usuario eliminado correctamente.");
+                    break;
 
-                    break; // salimos del while
                 } catch (IOException e) {
                     throw new DataAccessException("Error al leer o escribir el archivo: " + e.getMessage());
                 }
-            }else{
-                throw new ObjectNotExist("No existe el usuario a eliminar");
             }
         }
 
@@ -192,19 +219,24 @@ public class InterfazJSON implements InterfazDAO {
     }
 
     @Override
-    public boolean actualizar(Object obj) throws ObjectNotExist, DataEmptyAccess {
+    public boolean actualizar(Object obj) throws ObjectNotExist, DataEmptyAccess,InsercionException {
 
+        // Comprobación de los argumentos
         if (obj == null) {
             throw new DataEmptyAccess("El objeto usuario está vacío");
         }
 
+        // Cast de usuario y lista de los usuarios
         Usuario usuarioActualizado = (Usuario) obj;
         List<Usuario> usuarios = buscar();
 
+        //Variable que nos dirá si el usuario se ha encontrado y declaramos un JsonArrayBuilder
         boolean encontrado = false;
         JsonArrayBuilder nuevoArray = Json.createArrayBuilder();
 
+        // Recorremos la lsia de usuarios
         for (Usuario u : usuarios) {
+
             if (u.getEmail().equalsIgnoreCase(usuarioActualizado.getEmail())) {
                 // Sustituimos el antiguo por el nuevo (actualizado)
                 nuevoArray.add(usuarioActualizado.toJson());
@@ -224,7 +256,7 @@ public class InterfazJSON implements InterfazDAO {
              JsonWriter writer = Json.createWriter(fw)) {
             writer.writeArray(nuevoArray.build());
         } catch (IOException e) {
-            throw new RuntimeException("Error al escribir el archivo: " + e.getMessage());
+            throw new InsercionException("Error al escribir el archivo: " + e.getMessage());
         }
 
         return true;
@@ -234,16 +266,22 @@ public class InterfazJSON implements InterfazDAO {
     @Override
     public List<Usuario> buscar() throws DataEmptyAccess {
 
+        // Lista para guaqrdar los usuarios
         List<Usuario> listaUsuarios = new ArrayList<>();
+
+        // Comprobamos si el fichero está vacío
         if (vacio()){
             throw new DataEmptyAccess("No hay datos");
         }
 
+        // Hacemos el FileReader con el fichero de usuarios JSON
         try (FileReader fileReader = new FileReader(fichero);
              JsonReader jsonReader = Json.createReader(fileReader)) {
 
+            // Para guardar lo que encontremos en el json
             JsonArray jsonUsuarios = jsonReader.readArray();
 
+            // Por cada uno vamos creando los objetos necesario, ya sea puzzle o usuario
             for (JsonValue jsonValue : jsonUsuarios) {
 
                 JsonObject jsonUsuario = jsonValue.asJsonObject();
@@ -265,6 +303,7 @@ public class InterfazJSON implements InterfazDAO {
                     p.setColor(jsonPuzzle.getBoolean("color"));
                     p.setValoracion(jsonPuzzle.getInt("valoracion", 0));
 
+                    // Agregamos a la lista
                     puzzles.add(p);
 
                 }
@@ -275,9 +314,10 @@ public class InterfazJSON implements InterfazDAO {
                         jsonUsuario.getString("email"),
                         jsonUsuario.getString("passwd"),
                         Usuario.TipoUsuario.valueOf(jsonUsuario.getString("tipo")),
-                        puzzles
+                        puzzles //Lista de puzzles del usuario en caso de tener
                 );
 
+                // Agregamos el usuario con puzzles en caso de que tenga
                 listaUsuarios.add(usuario);
 
             }
@@ -293,12 +333,16 @@ public class InterfazJSON implements InterfazDAO {
     @Override
     public List<String> buscarAtributo(String atributo) throws DataEmptyAccess {
 
+        // Lista de usuarios y lista para meter al que queremos buscar
         List<Usuario> listaUsuarios = buscar();
         List<String> encontrado = new  ArrayList<>();
 
+        // Comprobación de que haya usuarios
         if(listaUsuarios.isEmpty()){
             throw new DataEmptyAccess("No hay datos");
         }
+
+        // Por cada uno de los resultados, según el atributo que queramos nos establecerá la característica
         String caracteristica = "";
         for (Usuario usuario : listaUsuarios) {
             JsonObject user = usuario.toJson();
@@ -336,6 +380,7 @@ public class InterfazJSON implements InterfazDAO {
 
             }
         }
+        // Ordenamos la lista y la devolvemos
         Collections.sort(encontrado);
         return encontrado;
     }
@@ -343,12 +388,14 @@ public class InterfazJSON implements InterfazDAO {
     @Override
     public boolean bloquearUsuario(Object obj) throws DataFullException, InsercionException {
 
+        // Cast del obj a usurio y lista de usuarios
         Usuario usuario = (Usuario) obj;
         List<Usuario>  listaUsuarios = buscar();
 
         if (lleno()) {
             throw new DataFullException("No hay espacio en el fichero");
         }
+        // Comprobamos el usuario
         for(Usuario usuarioAux : listaUsuarios){
             if(usuario.getEmail().equalsIgnoreCase(usuarioAux.getEmail())){
                 try{
@@ -361,6 +408,8 @@ public class InterfazJSON implements InterfazDAO {
             }
         }
 
+
+        // Lo declaramos para que escriba un nuevo objeto json con el usuario a bloquear en el fichero de usuario bloqueados
         JsonArrayBuilder puzzlesArrayBuilder = Json.createArrayBuilder();
         JsonObject jsonUsuario = Json.createObjectBuilder()
                 .add("nombre", usuario.getNombre())
@@ -371,6 +420,7 @@ public class InterfazJSON implements InterfazDAO {
                 .add("puzzles", puzzlesArrayBuilder)
                 .build();
 
+        // Escribimos el usuario, sin puzzles,  en el fichero de usuariosJson de bloqueados
         try (FileWriter fileWriter = new FileWriter(ficheroBloq.getAbsolutePath(), true);
              JsonWriter jsonWriter = Json.createWriter(fileWriter)) {
 
@@ -411,6 +461,7 @@ public class InterfazJSON implements InterfazDAO {
     @Override
     public Puzzle[] getTopFive() throws DataEmptyAccess {
 
+        // Lista de usuario, para guardar los puzzles y las medias, ya que ordenamos por media
         List<Usuario> listaUsuarios = buscar();
         List<Puzzle> puzzle = new ArrayList<>();
         List<Integer> medias = new ArrayList<>();

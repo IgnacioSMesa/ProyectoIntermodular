@@ -50,7 +50,7 @@ public interface InterfazDAO {
      * @throws ObjectNotExist
      * @throws DataEmptyAccess
      */
-    public boolean actualizar(Object obj) throws  ObjectNotExist, DataEmptyAccess;
+    public boolean actualizar(Object obj) throws  ObjectNotExist, DataEmptyAccess, InsercionException;
 
     /**
      * Devuelve un listado de los objetos

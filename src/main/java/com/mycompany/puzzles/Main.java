@@ -173,10 +173,10 @@ public class Main {
                                 List<Usuario> users = interfazJSON.buscar();
                                 sc.nextLine();
                                 System.out.print("🚫 Escriba el nombre del usuario que desea bloquear: ");
-                                String nombreBloquear = sc.nextLine();
+                                String emailBloquear = sc.nextLine();
 
                                 for (Usuario u : users) {
-                                    if (u.getNombre().equalsIgnoreCase(nombreBloquear)) {
+                                    if (u.getEmail().equalsIgnoreCase(emailBloquear)) {
                                         try {
                                             interfazJSON.bloquearUsuario(u);
                                             System.out.println("🔒 Usuario " + u.getNombre() + " bloqueado correctamente.");
@@ -352,10 +352,10 @@ public class Main {
                                 List<Usuario> users = interfazXML.buscar();
                                 sc.nextLine();
                                 System.out.print("🚫 Escriba el nombre del usuario que desea bloquear: ");
-                                String nombreBloquear = sc.nextLine();
+                                String emailBloquear = sc.nextLine();
 
                                 for (Usuario u : users) {
-                                    if (u.getNombre().equalsIgnoreCase(nombreBloquear)) {
+                                    if (u.getEmail().equalsIgnoreCase(emailBloquear)) {
                                         try {
                                             interfazXML.bloquearUsuario(u);
                                             System.out.println("🔒 Usuario " + u.getNombre() + " bloqueado correctamente.");

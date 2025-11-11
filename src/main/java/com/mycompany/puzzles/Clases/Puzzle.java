@@ -87,7 +87,7 @@ public class Puzzle {
         if (dificultad == null) {
             throw new ArgumentException("Dificultad no puede ser nulo");
         }
-        if (!dificultad.equals(Dificultades.Facil) ||!dificultad.equals(Dificultades.Medio) ||!dificultad.equals(Dificultades.Extremo)) {
+        if (!dificultad.equals(Dificultades.Facil) &&!dificultad.equals(Dificultades.Medio) &&!dificultad.equals(Dificultades.Extremo)) {
             throw new ArgumentException("Dificultad no encontrado");
         }
         this.dificultad = dificultad;
@@ -101,7 +101,7 @@ public class Puzzle {
     }
 
     public void setColor(boolean color)throws ArgumentException {
-        if(color!=true || color!=false){
+        if(color!=true && color!=false){
             throw new ArgumentException("El color solo puede ser true o false");
         }
         this.color = color;

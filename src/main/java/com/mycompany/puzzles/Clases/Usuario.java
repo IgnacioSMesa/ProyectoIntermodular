@@ -120,7 +120,7 @@ public class Usuario {
         if (tipoUsuario == null) {
             throw new ArgumentException("El tipo de usuario no puede ser nulo");
         }
-        if (!tipoUsuario.equals(TipoUsuario.Admin) || !tipoUsuario.equals(TipoUsuario.Bloqueado) || !tipoUsuario.equals(TipoUsuario.Usuario)) {
+        if (!tipoUsuario.equals(TipoUsuario.Admin) && !tipoUsuario.equals(TipoUsuario.Bloqueado) && !tipoUsuario.equals(TipoUsuario.Usuario)) {
             throw new ArgumentException("Tipo de usuario no válido");
         }
         this.tipoUsuario = tipoUsuario;

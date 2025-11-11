@@ -146,6 +146,8 @@ public class InterfazXML implements InterfazDAO {
 
     @Override
     public boolean eliminar(String email) throws DataEmptyAccess, DeleteException, DataAccessException, ObjectNotExist {
+
+        // Control de errores de argumento
         if (email == null || email.isEmpty())
             throw new DataEmptyAccess("El email está vacío");
 
@@ -190,7 +192,7 @@ public class InterfazXML implements InterfazDAO {
     }
 
     @Override
-    public boolean actualizar(Object obj) throws ObjectNotExist, DataEmptyAccess {
+    public boolean actualizar(Object obj) throws ObjectNotExist, DataEmptyAccess, InsercionException{
         if (obj == null) throw new DataEmptyAccess("El objeto usuario está vacío");
 
         Usuario usuarioActualizado = (Usuario) obj;
@@ -230,7 +232,7 @@ public class InterfazXML implements InterfazDAO {
         } catch (ObjectNotExist | DataEmptyAccess e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar: " + e.getMessage());
+            throw new InsercionException("Error al actualizar: " + e.getMessage());
         }
     }
 
