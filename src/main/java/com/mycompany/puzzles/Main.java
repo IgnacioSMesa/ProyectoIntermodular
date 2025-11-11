@@ -16,6 +16,7 @@ import java.util.Scanner;
  */
 public class Main {
 
+    // Variables globales
     static Scanner sc = new Scanner(System.in);
     static String email = "", passwd = "";
 

@@ -24,13 +24,12 @@ import java.util.List;
 
 public class InterfazXML implements InterfazDAO {
 
-    // Rutas a los ficheros de XML
+    // Rutas relativas a los ficheros de XML
     private File fichero = new File("src/main/resources/Ficheros/usuarios.xml");
     private File ficheroBloq = new File("src/main/resources/Ficheros/usuariosBloqueados.xml");
 
     @Override
     public boolean lleno(File fichero) {
-
         // Establecemos un tamaño máximo y retornamos true cuando supere el tamaño
         long TAM_MAX = 5L * 1024 * 1024 * 1024; // 5 GB
         return fichero.length() >= TAM_MAX;

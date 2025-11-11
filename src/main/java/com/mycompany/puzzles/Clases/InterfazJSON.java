@@ -27,7 +27,7 @@ import java.util.List;
 
 public class InterfazJSON implements InterfazDAO {
 
-    // Ficheros de destino
+    // Ficheros de destino con rutas relativas
     private File fichero = new File("src/main/resources/Ficheros/usuarios.json");
     private File ficheroBloq = new File("src/main/resources/Ficheros/usuariosBloqueados.json");
 
@@ -38,12 +38,10 @@ public class InterfazJSON implements InterfazDAO {
 
         // Retorna true si el tamaño del fichero supera al máximo establecido
         return fichero.length() >= TAM_MAX;
-
     }
 
     @Override
     public boolean vacio(File fichero) {
-
         if (fichero.exists()) {
             // Retorna true si el fichero no tiene nada
             if (fichero.length() == 0) {
@@ -54,7 +52,6 @@ public class InterfazJSON implements InterfazDAO {
         } else {
             return false;
         }
-
     }
 
     @Override

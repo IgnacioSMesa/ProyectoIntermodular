@@ -14,13 +14,13 @@ import java.util.List;
 public interface InterfazDAO {
 
     /**
-     *
+     * @param fichero a comprobar
      * @return true si está lleno false si hay espacio
      */
     public boolean lleno(File fichero);
 
     /**
-     *
+     * @param fichero a comprobar
      * @return true si está vacío
      */
     public boolean vacio(File fichero);
