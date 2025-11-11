@@ -469,7 +469,7 @@ public class InterfazJSON implements InterfazDAO {
         for (Usuario usuarioAux : listaUsuarios) {
             puzzle.addAll(usuarioAux.getPuzzles());
         }
-        // blucle
+
         for (Puzzle puzzleAux : puzzle) {
             medias.add(puzzleAux.getTiempo());
         }

@@ -354,7 +354,6 @@ public class Main {
                                 System.out.print("🚫 Escriba el nombre del usuario que desea bloquear: ");
                                 String emailBloquear = sc.nextLine();
 
-                                // Bucle
                                 for (Usuario u : users) {
                                     if (u.getEmail().equalsIgnoreCase(emailBloquear)) {
                                         try {
