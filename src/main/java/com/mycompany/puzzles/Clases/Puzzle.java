@@ -87,7 +87,7 @@ public class Puzzle {
         if (dificultad == null) {
             throw new ArgumentException("Dificultad no puede ser nulo");
         }
-        if (!dificultad.equals(Dificultades.Facil) &&!dificultad.equals(Dificultades.Medio) &&!dificultad.equals(Dificultades.Extremo)) {
+        if (!dificultad.equals(Dificultades.Facil) &&!dificultad.equals(Dificultades.Medio) && !dificultad.equals(Dificultades.Dificil) &&!dificultad.equals(Dificultades.Extremo)) {
             throw new ArgumentException("Dificultad no encontrado");
         }
         this.dificultad = dificultad;
